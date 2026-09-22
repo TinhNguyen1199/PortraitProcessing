@@ -1,0 +1,12 @@
+# Netlify / Cloudflare Pages đọc file này.
+#
+# Hai dòng dưới bật crossOriginIsolated, nhờ đó onnxruntime-web dùng được
+# WASM đa luồng. Thiếu chúng thì trang vẫn chạy nhưng tách nền chỉ còn 1 luồng
+# và chậm hơn nhiều.
+#
+# Dùng 'credentialless' chứ KHÔNG dùng 'require-corp': require-corp sẽ chặn
+# việc tải model từ huggingface.co và cdn.jsdelivr.net vì chúng không gửi
+# header CORP.
+/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: credentialless

@@ -30,6 +30,33 @@ npm run dev     # http://127.0.0.1:5173
 npm run build
 ```
 
+## Đưa lên mạng
+
+Bắt buộc: nơi host phải gửi được **header tuỳ chỉnh**. Không có hai header dưới đây thì
+`crossOriginIsolated` tắt, onnxruntime-web rơi về WASM một luồng và tách nền chậm hẳn.
+
+```
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Embedder-Policy: credentialless
+```
+
+Phải là `credentialless`, **không** được dùng `require-corp` — require-corp sẽ chặn luôn
+việc tải model từ huggingface.co và cdn.jsdelivr.net vì hai nơi đó không gửi header CORP.
+
+| Nền tảng | Được không | Ghi chú |
+|---|---|---|
+| **Vercel** | ✅ khuyên dùng | Đã có sẵn `vercel.json`. Nối repo là xong, không cần cấu hình gì thêm. |
+| **Netlify** | ✅ | Đã có sẵn `netlify.toml` + `public/_headers`. |
+| Cloudflare Pages | ❌ | File `ort-wasm-*.wasm` nặng 25,6 MiB, vượt giới hạn 25 MiB/file của nền tảng này. |
+| GitHub Pages | ⚠️ chạy được nhưng chậm | Không đặt được header tuỳ chỉnh, nên luôn chạy WASM một luồng. |
+
+Máy người dùng phải vào được `huggingface.co` và `cdn.jsdelivr.net` để tải model lần đầu
+(~25MB, sau đó nằm trong cache trình duyệt). Mạng trường có tường lửa thì cần mở hai tên miền này.
+
+Dung lượng `dist` là 27MB, nhưng 26,8MB trong đó là file ORT wasm mà Vite gom vào **và thực tế
+không dùng tới** — transformers.js tải bản của nó thẳng từ jsDelivr. Xử lý được file này thì
+`dist` chỉ còn khoảng 1MB.
+
 ## Trạng thái: P0 (thử nghiệm) — đã chạy thật trên ảnh của trường
 
 Luồng xương sống đã hoạt động đầu-cuối: thả ảnh → tách nền → căn mặt → cắt 3×4 → duyệt lưới → tải ZIP.
