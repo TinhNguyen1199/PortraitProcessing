@@ -1,0 +1,35 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# An toàn dữ liệu: dự án này xử lý ảnh chân dung học sinh (trẻ vị thành niên).
+# Chặn sẵn mọi file ảnh để không ai lỡ tay commit ảnh thật lên repo công khai.
+# Cần thêm ảnh làm tài nguyên của app thì dùng: git add -f <đường-dẫn>
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.bmp
+*.tif
+*.tiff
